@@ -48,6 +48,25 @@ export default class CartManager {
         }
     }
 
+    async deleteProduct(idCart, idProduct){
+        const cartList = await this.getAllCarts()
+        const cart = cartList.findIndex((item) => item.id == idCart)
+        if (cart !== -1){
+            const productIndex = cartList[cart].products.findIndex((item) => item.product == idProduct)
+            console.log(productIndex)
+            if (productIndex !== -1){
+                cartList[cart].products.splice(productIndex, 1);
+                await fs.promises.writeFile(this.path, JSON.stringify(cartList));
+                return (`product con id: ${idProduct} eliminado del carrito con id: ${idCart}`, cartList)
+            }
+            else{
+                return (404)
+            }
+        }else{
+            return (404)
+        }
+    }
+
     async getAllCarts() {
         let carts = await fs.promises.readFile(this.path, 'utf-8')
         return JSON.parse(carts)
