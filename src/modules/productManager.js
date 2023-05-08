@@ -18,7 +18,7 @@ export default class ProductManager {
             if (valoresCampos[i] !== valorEnviado[i]) return false;
         }
 
-        product.id = this.#getId()
+        product.id = await this.#getId()
         product.status = true
         const listadoProductos = await this.#getAllProducts()
         const chkProduct = listadoProductos.findIndex((producto) => producto.code == campos.code)
@@ -50,10 +50,11 @@ export default class ProductManager {
         return false
     }
 
-    #getId() {
-        const oldID = this.#idProduct
-        this.#idProduct += 1
-        return oldID;
+    async #getId() {
+        const listadoProductos = await this.#getAllProducts()
+        let idValues = listadoProductos.length > 0 ? listadoProductos.map((items) => items.id) : 1        
+        const newID = idValues === 1 ? 1 : Math.max(...idValues) + 1        
+        return newID;
     }
     async updateProduct(idProd, campo, valor) {
         let camposIncluidos = await this.#checkCampos(campo)
@@ -96,10 +97,15 @@ export default class ProductManager {
             const valorEnviado = Object.keys(campos)
 
             for (let n of valorEnviado) {
-                if (!valoresCampos.includes(n)) {
-                    return false
+                console.log(n)
+                console.log(valoresCampos.includes(n))
+                if (n !== 'id'){
+                    if (!valoresCampos.includes(n)) {
+                        return false
+                    }
+                    return true
                 }
-                return true
+                
             }
         } else {
             if (!valoresCampos.includes(campos)) {
