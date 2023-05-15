@@ -97,8 +97,6 @@ export default class ProductManager {
             const valorEnviado = Object.keys(campos)
 
             for (let n of valorEnviado) {
-                console.log(n)
-                console.log(valoresCampos.includes(n))
                 if (n !== 'id'){
                     if (!valoresCampos.includes(n)) {
                         return false

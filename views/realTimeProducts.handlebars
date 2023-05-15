@@ -1,0 +1,15 @@
+<div class="cardsContainer" id="productos">
+    {{#each newProductList}}
+    <div class="card">
+        <ul>
+            <li class="title">{{this.title}}</li>
+            <li class="description">{{this.description}}</li>
+            <li class="price">Precio:${{this.price}}</li>
+            <li class="stock">Stock:{{this.stock}}</li>
+            <li class="code">Código:{{this.code}} / id: {{this.id}}</li>
+        </ul>
+    </div>
+    {{/each}}
+</div>
+<script src="socket.io/socket.io.js"></script>
+<script src="js/index.js"></script>

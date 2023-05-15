@@ -1,5 +1,7 @@
 import { Router } from "express";
 import ProductManager from "../modules/productManager.js";
+import { products } from "../utils.js";
+import { socketServer } from "../app.js";
 const pm = new ProductManager('./products.json')
 
 const productRouter = Router();
@@ -46,8 +48,9 @@ productRouter.post("/", async (req, res) => {
             res.status(400).send({ status: 400, error: 'Campos incompletos o incorrectos' })
         } else if (value === 'code repeated') {
             res.status(400).send({ status: 400, error: 'El campo code ya se encuentra cargado para otro producto' })
-        }
+        }   
         else {
+            socketServer.emit('update', await pm.getProducts())
             res.status(201).send(value)
         }
 
@@ -68,6 +71,7 @@ productRouter.put("/:pid", async (req, res) => {
             res.status(404).send({ error: 'El id indicado no corresponde a un producto valido' })
         }
         else{
+            socketServer.emit('update', await pm.getProducts())
             res.send(productEdit)
         }
     }
@@ -84,6 +88,7 @@ productRouter.delete("/:pid", async (req, res) => {
             res.status(404).send({ error: 'El id indicado no corresponde a un producto valido' })
         }        
         else{
+            socketServer.emit('update', await pm.getProducts())
             res.send(`se borró producto con id: ${pid}`)
         }
     }
